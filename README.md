@@ -25,7 +25,7 @@ Sample migrations are in the folder `sample-migrations/m150722_150000_adjacency_
 ## Configuring
 
 ```php
-use paulzi\nestedintervals\AdjacencyListBehavior;
+use paulzi\adjacencylist\AdjacencyListBehavior;
 
 class Sample extends \yii\db\ActiveRecord
 {
@@ -54,7 +54,7 @@ class Sample extends \yii\db\ActiveRecord
 Query class:
 
 ```php
-use paulzi\nestedintervals\AdjacencyListQueryTrait;
+use paulzi\adjacencylist\AdjacencyListQueryTrait;
 
 class SampleQuery extends \yii\db\ActiveQuery
 {
