@@ -116,7 +116,7 @@ class AdjacencyListBehavior extends Behavior
      */
     public function getParentsOrdered()
     {
-        $parents = $this->owner->parents;
+        $parents = $this->getParents()->all();
         $ids = array_flip($this->getParentsIds());
         $primaryKey = $this->getPrimaryKey();
         usort($parents, function($a, $b) use ($ids, $primaryKey) {
