@@ -71,6 +71,11 @@ class AdjacencyListBehavior extends Behavior
     protected $node;
 
     /**
+     * @var ActiveRecord[]
+     */
+    private $_parentsOrdered;
+
+    /**
      * @var array
      */
     private $_parentsIds;
@@ -116,6 +121,9 @@ class AdjacencyListBehavior extends Behavior
      */
     public function getParentsOrdered()
     {
+        if ($this->_parentsOrdered !== null) {
+            return $this->_parentsOrdered;
+        }
         $parents = $this->getParents()->all();
         $ids = array_flip($this->getParentsIds());
         $primaryKey = $this->getPrimaryKey();
@@ -128,7 +136,7 @@ class AdjacencyListBehavior extends Behavior
                 return $aIdx > $bIdx ? -1 : 1;
             }
         });
-        return $parents;
+        return $this->_parentsOrdered = $parents;
     }
 
     /**
