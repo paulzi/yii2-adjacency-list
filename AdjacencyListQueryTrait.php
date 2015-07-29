@@ -19,12 +19,7 @@ trait AdjacencyListQueryTrait
     {
         /** @var \yii\db\ActiveQuery $this */
         $class = $this->modelClass;
-        if (isset($class::$adjacencyListParentAttribute)) {
-            return $this->andWhere([$class::$adjacencyListParentAttribute => null]);
-        } else {
-            /** @var \yii\db\ActiveRecord|AdjacencyListBehavior $model */
-            $model = new $class;
-            return $this->andWhere([$model->parentAttribute => null]);
-        }
+        $model = new $class;
+        return $this->andWhere([$model->parentAttribute => null]);
     }
 }
