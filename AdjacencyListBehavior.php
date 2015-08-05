@@ -549,7 +549,9 @@ class AdjacencyListBehavior extends Behavior
                 break;
 
             default:
-                throw new NotSupportedException('Method "'. $this->owner->className() . '::insert" is not supported for inserting new nodes.');
+                if ($this->owner->getIsNewRecord()) {
+                    throw new NotSupportedException('Method "' . $this->owner->className() . '::insert" is not supported for inserting new nodes.');
+                }
         }
     }
 
