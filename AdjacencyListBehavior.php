@@ -206,8 +206,11 @@ class AdjacencyListBehavior extends Behavior
      */
     public function getChildren()
     {
-        return $this->owner->hasMany($this->owner->className(), [$this->parentAttribute => $this->getPrimaryKey()])
-            ->orderBy([$this->sortAttribute => SORT_ASC]);
+        $result = $this->owner->hasMany($this->owner->className(), [$this->parentAttribute => $this->getPrimaryKey()]);
+        if ($this->sortAttribute !== null) {
+            $result->orderBy([$this->sortAttribute => SORT_ASC]);
+        }
+        return $result;
     }
 
     /**
