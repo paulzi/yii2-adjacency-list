@@ -635,7 +635,10 @@ class AdjacencyListBehavior extends Behavior
             ->where([
                 'and',
                 [$forward ? '>=' : '<=', "{$tableName}.[[{$this->sortAttribute}]]", $to],
-                ["n.[[{$this->sortAttribute}]]" => null],
+                [
+                    "{$tableName}.[[{$this->parentAttribute}]]" => $this->node->getAttribute($this->parentAttribute),
+                    "n.[[{$this->sortAttribute}]]"              => null,
+                ],
             ])
             ->orderBy(["{$tableName}.[[{$this->sortAttribute}]]" => $forward ? SORT_ASC : SORT_DESC])
             ->limit(1)
