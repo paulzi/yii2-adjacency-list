@@ -509,6 +509,9 @@ class AdjacencyListBehavior extends Behavior
         switch ($this->operation) {
             case self::OPERATION_MAKE_ROOT:
                 $this->owner->setAttribute($this->parentAttribute, null);
+                if ($this->sortAttribute !== null) {
+                    $this->owner->setAttribute($this->sortAttribute, 0);
+                }
                 break;
 
             case self::OPERATION_PREPEND_TO:
