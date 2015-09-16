@@ -1,6 +1,11 @@
 # Yii2 Adjacency List Behavior
 
-Implementation of adjacency list algorithm for storing the trees in DB tables.  
+Implementation of adjacency list algorithm for storing the trees in DB tables.
+
+[![Packagist Version](https://img.shields.io/packagist/v/paulzi/yii2-adjacency-list.svg)](https://packagist.org/packages/paulzi/yii2-adjacency-list)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/paulzi/yii2-adjacency-list/master.svg)](https://scrutinizer-ci.com/g/paulzi/yii2-adjacency-list/?branch=master)
+[![Build Status](https://img.shields.io/travis/paulzi/yii2-adjacency-list/master.svg)](https://travis-ci.org/paulzi/yii2-adjacency-list)
+[![Total Downloads](https://img.shields.io/packagist/dt/paulzi/yii2-adjacency-list.svg)](https://packagist.org/packages/paulzi/yii2-adjacency-list)
 
 ## Install
 
