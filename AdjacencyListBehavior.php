@@ -362,7 +362,11 @@ class AdjacencyListBehavior extends Behavior
                 $j = $i + 1;
                 $query
                     ->addSelect(["lvl{$j}.[[{$primaryKey}]] as lvl{$j}"])
-                    ->leftJoin("{$tableName} lvl{$j}", "lvl{$j}.[[{$this->parentAttribute}]] = lvl{$i}.[[{$primaryKey}]]");
+                    ->leftJoin("{$tableName} lvl{$j}", [
+                        'and',
+                        "lvl{$j}.[[{$this->parentAttribute}]] = lvl{$i}.[[{$primaryKey}]]",
+                        ['is not', "lvl{$i}.[[{$primaryKey}]]", null],
+                    ]);
                 if ($this->sortAttribute !== null) {
                     $query->addOrderBy(["lvl{$j}.[[{$this->sortAttribute}]]" => SORT_ASC]);
                 }
@@ -384,6 +388,7 @@ class AdjacencyListBehavior extends Behavior
                         $result[]     = $lastLevelIds;
                     } else {
                         $lastLevelIds = [];
+                        break;
                     }
                 }
             } else {
