@@ -96,6 +96,7 @@ class AdjacencyListBehavior extends Behavior
             ActiveRecord::EVENT_AFTER_INSERT    => 'afterSave',
             ActiveRecord::EVENT_BEFORE_UPDATE   => 'beforeSave',
             ActiveRecord::EVENT_AFTER_UPDATE    => 'afterSave',
+            ActiveRecord::EVENT_BEFORE_DELETE   => 'beforeDelete',
             ActiveRecord::EVENT_AFTER_DELETE    => 'afterDelete',
         ];
     }
@@ -155,7 +156,7 @@ class AdjacencyListBehavior extends Behavior
     {
         $tableName = $this->owner->tableName();
         $id = $this->getParentsIds();
-        $id = $id[count($id) - 1];
+        $id = $id ? $id[count($id) - 1] : $this->owner->primaryKey;
         $query = $this->owner->find()
             ->andWhere(["{$tableName}.[[" . $this->getPrimaryKey() . "]]" => $id]);
         $query->multiple = false;
@@ -287,14 +288,14 @@ class AdjacencyListBehavior extends Behavior
             return $depth === null ? $this->_parentsIds : array_slice($this->_parentsIds, 0, $depth);
         }
 
-        $parentId = (string)$this->owner->getAttribute($this->parentAttribute);
+        $parentId = $this->owner->getAttribute($this->parentAttribute);
         if ($parentId === null) {
             if ($cache) {
                 $this->_parentsIds = [];
             }
             return [];
         }
-        $result     = [$parentId];
+        $result     = [(string)$parentId];
         $tableName  = $this->owner->tableName();
         $primaryKey = $this->getPrimaryKey();
         $depthCur   = 1;
@@ -309,12 +310,16 @@ class AdjacencyListBehavior extends Behavior
                     ->addSelect(["lvl{$j}.[[{$this->parentAttribute}]] as lvl{$j}"])
                     ->leftJoin("{$tableName} lvl{$j}", "lvl{$j}.[[{$primaryKey}]] = lvl{$i}.[[{$this->parentAttribute}]]");
             }
-            foreach ($query->one($this->owner->getDb()) as $parentId) {
-                $depthCur++;
-                if ($parentId === null) {
-                    break;
+            if ($parentIds = $query->one($this->owner->getDb())) {
+                foreach ($parentIds as $parentId) {
+                    $depthCur++;
+                    if ($parentId === null) {
+                        break;
+                    }
+                    $result[] = $parentId;
                 }
-                $result[] = $parentId;
+            } else {
+                $parentId = null;
             }
         }
         if ($cache && $depth === null) {
@@ -368,20 +373,24 @@ class AdjacencyListBehavior extends Behavior
                     $level = 0;
                     foreach ($row as $id) {
                         if ($id !== null) {
-                            $columns[$level][] = $id;
+                            $columns[$level][$id] = true;
                         }
                         $level++;
                     }
                 }
                 for ($i = 0; $i < $levels; $i++) {
-                    $lastLevelIds = isset($columns[$i]) ? $columns[$i] : [];
                     if (isset($columns[$i])) {
-                        $result[] = $columns[$i];
+                        $lastLevelIds = array_keys($columns[$i]);
+                        $result[]     = $lastLevelIds;
+                    } else {
+                        $lastLevelIds = [];
                     }
                 }
             } else {
                 $lastLevelIds = $query->column($this->owner->getDb());
-                $result[] = $lastLevelIds;
+                if ($lastLevelIds) {
+                    $result[] = $lastLevelIds;
+                }
             }
         }
         if ($cache && $depth === null) {
@@ -515,43 +524,19 @@ class AdjacencyListBehavior extends Behavior
                 break;
 
             case self::OPERATION_PREPEND_TO:
-                $this->checkNode(false);
-                $this->owner->setAttribute($this->parentAttribute, $this->node->getPrimaryKey());
-                if ($this->sortAttribute !== null) {
-                    $to = $this->node->getChildren()
-                        ->orderBy(null)
-                        ->min($this->sortAttribute);
-                    $to = $to !== null ? $to - $this->step : 0;
-                    $this->owner->setAttribute($this->sortAttribute, $to);
-                }
+                $this->insertIntoInternal(false);
                 break;
 
             case self::OPERATION_APPEND_TO:
-                $this->checkNode(false);
-                $this->owner->setAttribute($this->parentAttribute, $this->node->getPrimaryKey());
-                if ($this->sortAttribute !== null) {
-                    $to = $this->node->getChildren()
-                        ->orderBy(null)
-                        ->max($this->sortAttribute);
-                    $to = $to !== null ? $to + $this->step : 0;
-                    $this->owner->setAttribute($this->sortAttribute, $to);
-                }
+                $this->insertIntoInternal(true);
                 break;
 
             case self::OPERATION_INSERT_BEFORE:
-                $this->checkNode(true);
-                $this->owner->setAttribute($this->parentAttribute, $this->node->getAttribute($this->parentAttribute));
-                if ($this->sortAttribute !== null) {
-                    $this->moveTo($this->node->getAttribute($this->sortAttribute) - 1, false);
-                }
+                $this->insertNearInternal(false);
                 break;
 
             case self::OPERATION_INSERT_AFTER:
-                $this->checkNode(true);
-                $this->owner->setAttribute($this->parentAttribute, $this->node->getAttribute($this->parentAttribute));
-                if ($this->sortAttribute !== null) {
-                    $this->moveTo($this->node->getAttribute($this->sortAttribute) + 1, true);
-                }
+                $this->insertNearInternal(true);
                 break;
 
             default:
@@ -568,6 +553,21 @@ class AdjacencyListBehavior extends Behavior
     {
         $this->operation = null;
         $this->node      = null;
+    }
+
+    /**
+     * @param \yii\base\ModelEvent $event
+     * @throws Exception
+     */
+    public function beforeDelete($event)
+    {
+        if ($this->owner->getIsNewRecord()) {
+            throw new Exception('Can not delete a node when it is new record.');
+        }
+        if ($this->isRoot() && $this->operation !== self::OPERATION_DELETE_ALL) {
+            throw new Exception('Method "'. $this->owner->className() . '::delete" is not supported for deleting root nodes.');
+        }
+        $this->owner->refresh();
     }
 
     /**
@@ -625,16 +625,25 @@ class AdjacencyListBehavior extends Behavior
      */
     protected function moveTo($to, $forward)
     {
-        $this->owner->setAttribute($this->sortAttribute, $to);
+        $this->owner->setAttribute($this->sortAttribute, $to + ($forward ? 1 : -1));
 
-        $tableName = $this->owner->tableName();
+        $tableName  = $this->owner->tableName();
+        $primaryKey = $this->getPrimaryKey();
+        $joinCondition = [
+            'and',
+            [
+                "n.[[{$this->parentAttribute}]]" => $this->node->getAttribute($this->parentAttribute),
+                "n.[[{$this->sortAttribute}]]"   => new Expression("{$tableName}.[[{$this->sortAttribute}]] " . ($forward ? '+' : '-') . " 1"),
+            ]
+        ];
+        if (!$this->owner->getIsNewRecord()) {
+            $joinCondition[] = ['<>', "n.[[{$primaryKey}]]", $this->owner->primaryKey];
+        }
+
         $unallocated = (new Query())
             ->select("{$tableName}.[[{$this->sortAttribute}]]")
             ->from("{$tableName}")
-            ->leftJoin("{$tableName} n", [
-                "n.[[{$this->parentAttribute}]]" => $this->node->getAttribute($this->parentAttribute),
-                "n.[[{$this->sortAttribute}]]"   => new Expression("{$tableName}.[[{$this->sortAttribute}]] " . ($forward ? '+' : '-') . " 1"),
-            ])
+            ->leftJoin("{$tableName} n", $joinCondition)
             ->where([
                 'and',
                 [$forward ? '>=' : '<=', "{$tableName}.[[{$this->sortAttribute}]]", $to],
@@ -652,9 +661,49 @@ class AdjacencyListBehavior extends Behavior
             [
                 'and',
                 ["[[{$this->parentAttribute}]]" => $this->node->getAttribute($this->parentAttribute)],
-                ['between', $this->sortAttribute, $forward ? $to : $unallocated, $forward ? $unallocated : $to],
+                ['between', $this->sortAttribute, $forward ? $to + 1 : $unallocated, $forward ? $unallocated : $to - 1],
             ]
         );
+    }
+
+    /**
+     * Append to operation internal handler
+     * @param bool $append
+     * @throws Exception
+     */
+    protected function insertIntoInternal($append)
+    {
+        $this->checkNode(false);
+        $this->owner->setAttribute($this->parentAttribute, $this->node->getPrimaryKey());
+        if ($this->sortAttribute !== null) {
+            $to = $this->node->getChildren()->orderBy(null);
+            $to = $append ? $to->max($this->sortAttribute) : $to->min($this->sortAttribute);
+            if (
+                !$this->owner->getIsNewRecord() && (int)$to === $this->owner->getAttribute($this->sortAttribute)
+                && !$this->owner->getDirtyAttributes([$this->parentAttribute])
+            ) {
+
+            } elseif ($to !== null) {
+                $to += $append ? $this->step : -$this->step;
+            } else {
+                $to = 0;
+            }
+            $this->owner->setAttribute($this->sortAttribute, $to);
+        }
+    }
+
+    /**
+     * Insert operation internal handler
+     * @param bool $forward
+     * @throws Exception
+     */
+    protected function insertNearInternal($forward)
+    {
+        $this->checkNode(true);
+        $this->owner->setAttribute($this->parentAttribute, $this->node->getAttribute($this->parentAttribute));
+        if ($this->sortAttribute !== null) {
+            $this->moveTo($this->node->getAttribute($this->sortAttribute), $forward);
+        }
     }
 
     /**

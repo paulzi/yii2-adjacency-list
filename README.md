@@ -130,6 +130,7 @@ $descendants = $node11->descendantsOrdered; // via relation sorted
 $descendants = $node11->getDescendants()->all(); // via query
 $descendants = $node11->getDescendants(2, true)->all(); // get 2 levels of descendants and self node
 ```
+*Note: guaranteed order on each parent nodes, nodes of different parents can be mixed with each other and option childrenJoinLevels can change this order.
 
 To get the children of a node:
 
@@ -143,9 +144,11 @@ For get ordered array of primary keys descendants per level:
 
 ```php
 $node11 = Sample::findOne(['name' => 'node 1.1']);
-$ids = $node11->getChildrenIds();
-$ids = $node11->getChildrenIds(3, false); // get 3 levels of descendants primary keys with force updating from DB 
+$ids = $node11->getDescendantsIds(); // get array of per-level descendants primary keys
+$ids = $node11->getDescendantsIds(null, true); // get flat array of descendants primary keys
+$ids = $node11->getDescendantsIds(3, false, false); // get 3 levels array of per-level descendants primary keys with force updating from DB 
 ```
+*Note: guaranteed order on each parent nodes, nodes of different parents can be mixed with each other and option childrenJoinLevels can change this order.
 
 **Getting the leaves nodes**
 
@@ -239,3 +242,4 @@ $node11 = Sample::findOne(['name' => 'node 1.1']);
 $node11->delete(); // delete node, children come up to the parent
 $node11->deleteWithChildren(); // delete node and all descendants 
 ```
+*Note: when deleting with delete() child nodes mixed with parent*
