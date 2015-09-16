@@ -49,6 +49,16 @@ class NodeJoin extends \yii\db\ActiveRecord
     }
 
     /**
+     * @inheritdoc
+     */
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+    /**
      * @return NodeQuery
      */
     public static function find()
