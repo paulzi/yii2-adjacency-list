@@ -1,12 +1,20 @@
 <?php
+/**
+ * @link https://github.com/paulzi/yii2-adjacency-list
+ * @copyright Copyright (c) 2015 PaulZi <pavel.zimakoff@gmail.com>
+ * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
+ */
 
-namespace tests;
+namespace paulzi\adjacencylist\tests;
 
-use tests\migrations\TestMigration;
-use tests\models\Node;
-use tests\models\NodeJoin;
+use paulzi\adjacencylist\tests\migrations\TestMigration;
+use paulzi\adjacencylist\tests\models\Node;
+use paulzi\adjacencylist\tests\models\NodeJoin;
 use Yii;
 
+/**
+ * @author PaulZi <pavel.zimakoff@gmail.com>
+ */
 class AdjacencyListBehaviorTestCase extends BaseTestCase
 {
 
@@ -189,7 +197,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
     public function testMakeRootInsert()
     {
         (new TestMigration())->up();
-        $dataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/empty.php'));
+        $dataSet = new ArrayDataSet(require(__DIR__ . '/data/empty.php'));
         $this->getDatabaseTester()->setDataSet($dataSet);
         $this->getDatabaseTester()->onSetUp();
 
@@ -200,7 +208,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->makeRoot()->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-make-root-insert.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-make-root-insert.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -213,7 +221,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->makeRoot()->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-make-root-update.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-make-root-update.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -226,7 +234,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(41))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-insert-in-no-empty.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-insert-in-no-empty.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -239,7 +247,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(56))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-insert-in-empty.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-insert-in-empty.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -252,7 +260,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(41))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-same-node.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-same-node.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -265,7 +273,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(59))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-deep.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-deep.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -278,7 +286,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(41))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-out.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-out.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -291,7 +299,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(49))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-another-tree.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-prepend-to-update-another-tree.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -304,7 +312,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->prependTo(NodeJoin::findOne(45))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/data.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/data.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -360,7 +368,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(41))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-append-to-insert-in-no-empty.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-append-to-insert-in-no-empty.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -373,7 +381,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(56))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-append-to-insert-in-empty.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-append-to-insert-in-empty.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -386,7 +394,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(41))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-same-node.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-same-node.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -399,7 +407,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(59))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-deep.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-deep.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -412,7 +420,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(41))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-out.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-out.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -425,7 +433,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(58))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-another-tree.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-append-to-update-another-tree.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -439,7 +447,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->appendTo(NodeJoin::findOne(45))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/data.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/data.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -495,7 +503,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertBefore(NodeJoin::findOne(49))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-before-insert-no-gap.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-before-insert-no-gap.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -508,7 +516,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertBefore(NodeJoin::findOne(49))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-before-insert-gap.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-before-insert-gap.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -521,7 +529,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertBefore(NodeJoin::findOne(57))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-before-insert-begin.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-before-insert-begin.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -534,7 +542,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertBefore(NodeJoin::findOne(43))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-before-update-same-node.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-before-update-same-node.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -547,7 +555,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertBefore(NodeJoin::findOne(43))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/data.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/data.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -560,7 +568,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertBefore(NodeJoin::findOne(17))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-before-update-another-tree.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-before-update-another-tree.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -616,7 +624,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertAfter(NodeJoin::findOne(50))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-after-insert-no-gap.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-after-insert-no-gap.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -630,7 +638,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
 
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-after-insert-gap.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-after-insert-gap.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -643,7 +651,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertAfter(NodeJoin::findOne(54))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-after-insert-end.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-after-insert-end.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -656,7 +664,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertAfter(NodeJoin::findOne(42))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-after-update-same-node.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-after-update-same-node.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -669,7 +677,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertAfter(NodeJoin::findOne(42))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/data.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/data.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -682,7 +690,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertTrue($node->insertAfter(NodeJoin::findOne(16))->save());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-insert-after-update-another-tree.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-insert-after-update-another-tree.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -736,7 +744,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertEquals(1, NodeJoin::findOne(43)->delete());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-delete.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-delete.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -764,7 +772,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertEquals(5, NodeJoin::findOne(43)->deleteWithChildren());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-delete-with-children.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-delete-with-children.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -773,7 +781,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertEquals(40, Node::findOne(1)->deleteWithChildren());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-delete-with-children-root.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-delete-with-children-root.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
@@ -782,7 +790,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertEquals(21, NodeJoin::findOne(41)->deleteWithChildren());
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
-        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_ArrayDataSet(require(__DIR__ . '/data/test-delete-with-children-root-join.php'));
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-delete-with-children-root-join.php'));
         $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 

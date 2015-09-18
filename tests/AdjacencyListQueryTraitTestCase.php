@@ -1,11 +1,19 @@
 <?php
+/**
+ * @link https://github.com/paulzi/yii2-adjacency-list
+ * @copyright Copyright (c) 2015 PaulZi <pavel.zimakoff@gmail.com>
+ * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
+ */
 
-namespace tests;
+namespace paulzi\adjacencylist\tests;
 
-use tests\models\Node;
-use tests\models\NodeJoin;
+use paulzi\adjacencylist\tests\models\Node;
+use paulzi\adjacencylist\tests\models\NodeJoin;
 use Yii;
 
+/**
+ * @author PaulZi <pavel.zimakoff@gmail.com>
+ */
 class AdjacencyListQueryTraitTestCase extends BaseTestCase
 {
     public function testRoots()

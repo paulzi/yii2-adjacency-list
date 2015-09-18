@@ -1,10 +1,18 @@
 <?php
+/**
+ * @link https://github.com/paulzi/yii2-adjacency-list
+ * @copyright Copyright (c) 2015 PaulZi <pavel.zimakoff@gmail.com>
+ * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
+ */
 
-namespace tests\migrations;
+namespace paulzi\adjacencylist\tests\migrations;
 
 use yii\db\Schema;
 use yii\db\Migration;
 
+/**
+ * @author PaulZi <pavel.zimakoff@gmail.com>
+ */
 class TestMigration extends Migration
 {
     public function up()

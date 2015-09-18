@@ -1,14 +1,19 @@
 <?php
+/**
+ * @link https://github.com/paulzi/yii2-adjacency-list
+ * @copyright Copyright (c) 2015 PaulZi <pavel.zimakoff@gmail.com>
+ * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
+ */
 
-namespace tests;
+namespace paulzi\adjacencylist\tests;
 
-use tests\migrations\TestMigration;
-use tests\models\AttributeModeNode;
-use tests\models\MultipleTreeNode;
-use tests\models\Node;
+use paulzi\adjacencylist\tests\migrations\TestMigration;
 use Yii;
 use yii\db\Connection;
 
+/**
+ * @author PaulZi <pavel.zimakoff@gmail.com>
+ */
 class BaseTestCase extends \PHPUnit_Extensions_Database_TestCase
 {
     protected static $driverName = 'sqlite';
@@ -45,9 +50,6 @@ class BaseTestCase extends \PHPUnit_Extensions_Database_TestCase
             parent::setUp();
         }
     }
-
-
-
 
     /**
      * @inheritdoc

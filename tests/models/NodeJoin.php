@@ -1,10 +1,17 @@
 <?php
+/**
+ * @link https://github.com/paulzi/yii2-adjacency-list
+ * @copyright Copyright (c) 2015 PaulZi <pavel.zimakoff@gmail.com>
+ * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
+ */
 
-namespace tests\models;
+namespace paulzi\adjacencylist\tests\models;
 
 use paulzi\adjacencylist\AdjacencyListBehavior;
 
 /**
+ * @author PaulZi <pavel.zimakoff@gmail.com>
+ *
  * @property integer $id
  * @property integer $parent_id
  * @property integer $sort
