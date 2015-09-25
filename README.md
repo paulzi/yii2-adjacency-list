@@ -12,13 +12,13 @@ Implementation of adjacency list algorithm for storing the trees in DB tables.
 Install via Composer:
 
 ```bash
-composer require paulzi/yii2-adjacency_list
+composer require paulzi/yii2-adjacency-list
 ```
 
 or add
 
 ```bash
-"paulzi/yii2-adjacency_list" : "^1.0"
+"paulzi/yii2-adjacency-list" : "^1.0"
 ```
 
 to the `require` section of your `composer.json` file.
