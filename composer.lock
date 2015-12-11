@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3aca0e895879015ba4c535437edf45e9",
-    "content-hash": "fe3a6f21709a8bf5389459c2b442e436",
+    "hash": "d769937e88b3ca50ed31e863d0608963",
+    "content-hash": "8ea413309054fc32733beaf77c5b8613",
     "packages": [
         {
             "name": "bower-asset/jquery",
@@ -267,6 +267,51 @@
                 "html"
             ],
             "time": "2013-11-30 08:25:19"
+        },
+        {
+            "name": "paulzi/yii2-sortable",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paulzi/yii2-sortable.git",
+                "reference": "7d42496f009ef935e25e6146e34d7d588f62610f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paulzi/yii2-sortable/zipball/7d42496f009ef935e25e6146e34d7d588f62610f",
+                "reference": "7d42496f009ef935e25e6146e34d7d588f62610f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "~2.0.0"
+            },
+            "require-dev": {
+                "phpunit/dbunit": "~1.0",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "paulzi\\sortable\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PaulZi",
+                    "email": "pavel.zimakoff@gmail.com"
+                }
+            ],
+            "description": "Sortable Behavior for Yii2",
+            "keywords": [
+                "sortable",
+                "yii2"
+            ],
+            "time": "2015-12-11 16:04:55"
         },
         {
             "name": "yiisoft/yii2",
