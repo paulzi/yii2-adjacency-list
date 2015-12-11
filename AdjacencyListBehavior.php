@@ -594,7 +594,7 @@ class AdjacencyListBehavior extends Behavior
         switch ($this->operation) {
             case self::OPERATION_MAKE_ROOT:
                 $this->owner->setAttribute($this->parentAttribute, null);
-                if ($this->sortable !== null) {
+                if ($this->sortable !== false) {
                     $this->owner->setAttribute($this->behavior->sortAttribute, 0);
                 }
                 break;
@@ -722,7 +722,7 @@ class AdjacencyListBehavior extends Behavior
     {
         $this->checkNode(true);
         $this->owner->setAttribute($this->parentAttribute, $this->node->getAttribute($this->parentAttribute));
-        if ($this->sortable !== null) {
+        if ($this->sortable !== false) {
             if ($forward) {
                 $this->owner->moveAfter($this->node);
             } else {
