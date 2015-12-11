@@ -5,11 +5,11 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests;
+namespace paulzi\adjacencyList\tests;
 
-use paulzi\adjacencylist\tests\migrations\TestMigration;
-use paulzi\adjacencylist\tests\models\Node;
-use paulzi\adjacencylist\tests\models\NodeJoin;
+use paulzi\adjacencyList\tests\migrations\TestMigration;
+use paulzi\adjacencyList\tests\models\Node;
+use paulzi\adjacencyList\tests\models\NodeJoin;
 use Yii;
 
 /**
@@ -126,6 +126,25 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $data = null;
         $this->assertEquals($data, Node::findOne(58)->getNext()->one());
         $this->assertEquals($data, NodeJoin::findOne(58)->getNext()->one());
+    }
+
+    public function testPopulateTree()
+    {
+        $node = Node::findOne(4);
+        $node->populateTree();
+        $this->assertEquals(true, $node->isRelationPopulated('children'));
+        $this->assertEquals(true, $node->children[0]->isRelationPopulated('children'));
+        $this->assertEquals(32, $node->children[0]->children[0]->id);
+
+        $node = NodeJoin::findOne(4);
+        $node->populateTree(1);
+        $this->assertEquals(true, $node->isRelationPopulated('children'));
+        $this->assertEquals(false, $node->children[0]->isRelationPopulated('children'));
+        $this->assertEquals(11, $node->children[0]->id);
+
+        $node = Node::findOne(37);
+        $node->populateTree();
+        $this->assertEquals(true, $node->isRelationPopulated('children'));
     }
 
     public function testIsRoot()
@@ -802,6 +821,17 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $node = new Node(['slug' => 'new']);
         $node->deleteWithChildren();
 
+    }
+
+    public function testReorderChildren()
+    {
+        $this->assertEquals(true, Node::findOne(4)->reorderChildren(true) > 0);
+
+        $this->assertEquals(true, NodeJoin::findOne(41)->reorderChildren(false) > 0);
+
+        $dataSet = $this->getConnection()->createDataSet(['tree']);
+        $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-reorder-children.php'));
+        $this->assertDataSetsEqual($expectedDataSet, $dataSet);
     }
 
     /**

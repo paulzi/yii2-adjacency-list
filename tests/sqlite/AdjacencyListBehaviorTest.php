@@ -5,9 +5,9 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests\sqlite;
+namespace paulzi\adjacencyList\tests\sqlite;
 
-use paulzi\adjacencylist\tests\AdjacencyListBehaviorTestCase;
+use paulzi\adjacencyList\tests\AdjacencyListBehaviorTestCase;
 
 /**
  * @group sqlite

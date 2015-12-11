@@ -5,10 +5,10 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests;
+namespace paulzi\adjacencyList\tests;
 
-use paulzi\adjacencylist\tests\models\Node;
-use paulzi\adjacencylist\tests\models\NodeJoin;
+use paulzi\adjacencyList\tests\models\Node;
+use paulzi\adjacencyList\tests\models\NodeJoin;
 use Yii;
 
 /**

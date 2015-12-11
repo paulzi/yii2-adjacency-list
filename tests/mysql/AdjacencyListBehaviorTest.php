@@ -5,9 +5,9 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests\mysql;
+namespace paulzi\adjacencyList\tests\mysql;
 
-use paulzi\adjacencylist\tests\AdjacencyListBehaviorTestCase;
+use paulzi\adjacencyList\tests\AdjacencyListBehaviorTestCase;
 
 /**
  * @group mysql

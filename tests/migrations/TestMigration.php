@@ -5,7 +5,7 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests\migrations;
+namespace paulzi\adjacencyList\tests\migrations;
 
 use yii\db\Schema;
 use yii\db\Migration;

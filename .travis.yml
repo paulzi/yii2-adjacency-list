@@ -12,7 +12,7 @@ sudo: false
 install:
   - composer self-update
   - composer global require fxp/composer-asset-plugin:~1.0
-  - composer install --prefer-dist --no-interaction
+  - composer update --prefer-dist --no-interaction
 
 before_script:
   - mysql --version

@@ -5,7 +5,7 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist;
+namespace paulzi\adjacencyList;
 
 /**
  * @author PaulZi <pavel.zimakoff@gmail.com>

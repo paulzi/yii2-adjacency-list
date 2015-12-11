@@ -5,9 +5,9 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests;
+namespace paulzi\adjacencyList\tests;
 
-use paulzi\adjacencylist\tests\migrations\TestMigration;
+use paulzi\adjacencyList\tests\migrations\TestMigration;
 use Yii;
 use yii\db\Connection;
 

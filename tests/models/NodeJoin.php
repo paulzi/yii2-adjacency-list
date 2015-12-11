@@ -5,9 +5,9 @@
  * @license MIT (https://github.com/paulzi/yii2-adjacency-list/blob/master/LICENSE)
  */
 
-namespace paulzi\adjacencylist\tests\models;
+namespace paulzi\adjacencyList\tests\models;
 
-use paulzi\adjacencylist\AdjacencyListBehavior;
+use paulzi\adjacencyList\AdjacencyListBehavior;
 
 /**
  * @author PaulZi <pavel.zimakoff@gmail.com>

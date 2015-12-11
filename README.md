@@ -18,19 +18,37 @@ composer require paulzi/yii2-adjacency-list
 or add
 
 ```bash
-"paulzi/yii2-adjacency-list" : "^1.0"
+"paulzi/yii2-adjacency-list" : "^2.0"
 ```
 
 to the `require` section of your `composer.json` file.
 
-## Migrations
+## Migrations example
 
-Sample migrations are in the folder `sample-migrations/m150722_150000_adjacency_list.php`.
+```php
+class m150722_150000_adjacency_list extends Migration
+{
+    public function up()
+    {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
+        $this->createTable('{{%adjacency_list}}', [
+            'id'        => Schema::TYPE_PK,
+            'parent_id' => Schema::TYPE_INTEGER . ' NULL',
+            'sort'      => Schema::TYPE_INTEGER . ' NOT NULL',
+        ], $tableOptions);
+        $this->createIndex('parent_sort', '{{%adjacency_list}}', ['parent_id', 'sort']);
+    }
+}
+```
 
 ## Configuring
 
 ```php
-use paulzi\adjacencylist\AdjacencyListBehavior;
+use paulzi\adjacencyList\AdjacencyListBehavior;
 
 class Sample extends \yii\db\ActiveRecord
 {
@@ -59,7 +77,7 @@ class Sample extends \yii\db\ActiveRecord
 Query class:
 
 ```php
-use paulzi\adjacencylist\AdjacencyListQueryTrait;
+use paulzi\adjacencyList\AdjacencyListQueryTrait;
 
 class SampleQuery extends \yii\db\ActiveQuery
 {
@@ -67,11 +85,14 @@ class SampleQuery extends \yii\db\ActiveQuery
 }
 ```
 
+## Sortable Behavior
+
+This behavior attach SortableBehavior. You can use its methods (for example, reorder()).
+
 ## Options
 
 - `$parentAttribute = 'parent_id'` - parent attribute in table schema.
-- `$sortAttribute = 'sort'` - sort attribute in table schema.
-- `$step = 100` - gap size between elements. 
+- `$sortable = []` - SortableBehavior settings - see [paulzi/yii2-sortable](https://github.com/paulzi/yii2-sortable).
 - `$checkLoop = false` - check loop when moving nodes (slower).
 - `$parentsJoinLevels = 3` - amount of join levels, when finding ancestors.
 - `$childrenJoinLevels = 3` - amount of join levels, when finding descendants.
@@ -136,6 +157,14 @@ $descendants = $node11->getDescendants()->all(); // via query
 $descendants = $node11->getDescendants(2, true)->all(); // get 2 levels of descendants and self node
 ```
 *Note: guaranteed order on each parent nodes, nodes of different parents can be mixed with each other and option childrenJoinLevels can change this order.
+
+To populate `children` relations for self and descendants of a node:
+
+```php
+$node11 = Sample::findOne(['name' => 'node 1.1']);
+$tree = $node11->populateTree(); // populate all levels
+$tree = $node11->populateTree(2); // populate 2 levels of descendants
+```
 
 To get the children of a node:
 
@@ -248,3 +277,18 @@ $node11->delete(); // delete node, children come up to the parent
 $node11->deleteWithChildren(); // delete node and all descendants 
 ```
 *Note: when deleting with delete() child nodes mixed with parent*
+
+Reorder children:
+
+```php
+$model = Sample::findOne(1);
+$model->reorderChildren(true); // reorder with center zero
+$model = Sample::findOne(2);
+$model->reorderChildren(false); // reorder from zero
+```
+
+## Updating from 1.x to 2.x
+
+1) Move attributes `sortAttribute`, `step` into `sortable` attribute.
+2) Change namespace from `paulzi\adjacencylist` to `paulzi\adjacencyList`.
+3) Include `paulzi\yii2-sortable` (`composer update`).
