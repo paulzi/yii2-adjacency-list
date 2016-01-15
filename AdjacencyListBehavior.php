@@ -447,7 +447,7 @@ class AdjacencyListBehavior extends Behavior
             $relates[$key][] = $node;
         }
 
-        $nodes[$this->owner->getPrimaryKey()] = $this->owner;
+        $nodes[] = $this->owner;
         foreach ($nodes as $node) {
             $key = $node->getPrimaryKey();
             if (isset($relates[$key])) {
