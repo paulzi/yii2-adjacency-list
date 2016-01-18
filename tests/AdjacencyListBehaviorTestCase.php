@@ -79,7 +79,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, Node::findOne(32)->descendantsOrdered));
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, NodeJoin::findOne(32)->descendantsOrdered));
 
-        $data = [54, 55, 56, 57];
+        $data = [57, 56, 55, 54];
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, Node::findOne(44)->getDescendantsOrdered()));
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, NodeJoin::findOne(44)->getDescendantsOrdered()));
     }
@@ -136,11 +136,11 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $this->assertEquals(true, $node->children[0]->isRelationPopulated('children'));
         $this->assertEquals(32, $node->children[0]->children[0]->id);
 
-        $node = NodeJoin::findOne(4);
+        $node = NodeJoin::findOne(44);
         $node->populateTree(1);
         $this->assertEquals(true, $node->isRelationPopulated('children'));
         $this->assertEquals(false, $node->children[0]->isRelationPopulated('children'));
-        $this->assertEquals(11, $node->children[0]->id);
+        $this->assertEquals(57, $node->children[0]->id);
 
         $node = Node::findOne(37);
         $node->populateTree();

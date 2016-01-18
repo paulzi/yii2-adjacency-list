@@ -215,7 +215,7 @@ class AdjacencyListBehavior extends Behavior
             if ($aIdx == $bIdx) {
                 return 0;
             } else {
-                return $aIdx > $bIdx ? -1 : 1;
+                return $aIdx > $bIdx ? 1 : -1;
             }
         });
         return $descendants;
@@ -433,9 +433,11 @@ class AdjacencyListBehavior extends Behavior
     {
         /** @var ActiveRecord[]|static[] $nodes */
         if ($depth === null) {
-            $nodes = $this->owner->descendants;
+            $nodes = $this->owner->descendantsOrdered;
         } else {
-            $nodes = $this->getDescendants($depth)->all();
+            $nodes = $this->getDescendants($depth)
+                ->orderBy($this->sortable !== false ? [$this->behavior->sortAttribute => SORT_ASC] : null)
+                ->all();
         }
 
         $relates = [];
