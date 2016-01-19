@@ -39,6 +39,7 @@ class m150722_150000_adjacency_list extends Migration
             'id'        => Schema::TYPE_PK,
             'parent_id' => Schema::TYPE_INTEGER . ' NULL',
             'sort'      => Schema::TYPE_INTEGER . ' NOT NULL',
+            'name'      => Schema::TYPE_STRING . ' NOT NULL', // example field
         ], $tableOptions);
         $this->createIndex('parent_sort', '{{%adjacency_list}}', ['parent_id', 'sort']);
     }
