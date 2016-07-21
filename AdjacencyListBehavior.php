@@ -542,6 +542,14 @@ class AdjacencyListBehavior extends Behavior
     }
 
     /**
+     * Need for paulzi/auto-tree
+     */
+    public function preDeleteWithChildren()
+    {
+        $this->operation = self::OPERATION_DELETE_ALL;
+    }
+
+    /**
      * @return bool|int
      * @throws \Exception
      * @throws \yii\db\Exception
