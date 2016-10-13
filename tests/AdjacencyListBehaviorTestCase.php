@@ -134,6 +134,7 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $node->populateTree();
         $this->assertEquals(true, $node->isRelationPopulated('children'));
         $this->assertEquals(true, $node->children[0]->isRelationPopulated('children'));
+        $this->assertEquals(true, $node->children[0]->children[0]->isRelationPopulated('children'));
         $this->assertEquals(32, $node->children[0]->children[0]->id);
 
         $node = NodeJoin::findOne(44);
@@ -145,6 +146,11 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $node = Node::findOne(37);
         $node->populateTree();
         $this->assertEquals(true, $node->isRelationPopulated('children'));
+
+        $node = Node::findOne(37);
+        $node->populateTree(1);
+        $this->assertEquals(true, $node->isRelationPopulated('children'));
+        $this->assertEquals([], $node->children);
     }
 
     public function testIsRoot()

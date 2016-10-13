@@ -432,10 +432,17 @@ class AdjacencyListBehavior extends Behavior
     public function populateTree($depth = null)
     {
         /** @var ActiveRecord[]|static[] $nodes */
+        $depths = [$this->owner->getPrimaryKey() => 0];
         if ($depth === null) {
             $nodes = $this->owner->descendantsOrdered;
         } else {
-            $nodes = $this->getDescendants($depth)
+            $data = $this->getDescendantsIds($depth);
+            foreach ($data as $i => $ids) {
+                foreach ($ids as $id) {
+                    $depths[$id] = $i + 1;
+                }
+            }
+            $nodes  = $this->getDescendants($depth)
                 ->orderBy($this->sortable !== false ? [$this->behavior->sortAttribute => SORT_ASC] : null)
                 ->all();
         }
@@ -454,7 +461,7 @@ class AdjacencyListBehavior extends Behavior
             $key = $node->getPrimaryKey();
             if (isset($relates[$key])) {
                 $node->populateRelation('children', $relates[$key]);
-            } elseif ($depth === null) {
+            } elseif ($depth === null || (isset($depths[$node->getPrimaryKey()]) && $depths[$node->getPrimaryKey()] < $depth)) {
                 $node->populateRelation('children', []);
             }
         }
@@ -716,9 +723,9 @@ class AdjacencyListBehavior extends Behavior
         $this->owner->setAttribute($this->parentAttribute, $this->node->getPrimaryKey());
         if ($this->sortable !== false) {
             if ($append) {
-                $this->owner->moveLast();
+                $this->behavior->moveLast();
             } else {
-                $this->owner->moveFirst();
+                $this->behavior->moveFirst();
             }
         }
     }
@@ -734,9 +741,9 @@ class AdjacencyListBehavior extends Behavior
         $this->owner->setAttribute($this->parentAttribute, $this->node->getAttribute($this->parentAttribute));
         if ($this->sortable !== false) {
             if ($forward) {
-                $this->owner->moveAfter($this->node);
+                $this->behavior->moveAfter($this->node);
             } else {
-                $this->owner->moveBefore($this->node);
+                $this->behavior->moveBefore($this->node);
             }
         }
     }
