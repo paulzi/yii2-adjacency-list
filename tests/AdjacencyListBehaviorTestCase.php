@@ -228,9 +228,11 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
 
         $node = new Node(['slug' => 'r']);
         $this->assertTrue($node->makeRoot()->save());
+        $this->assertEquals($node->parent_id, null);
 
         $node = new NodeJoin(['slug' => 'r']);
         $this->assertTrue($node->makeRoot()->save());
+        $this->assertEquals($node->parent_id, null);
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
         $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-make-root-insert.php'));
@@ -241,9 +243,13 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
     {
         $node = Node::findOne(51);
         $this->assertTrue($node->makeRoot()->save());
+        $node->refresh();
+        $this->assertEquals($node->parent_id, null);
 
         $node = NodeJoin::findOne(2);
         $this->assertTrue($node->makeRoot()->save());
+        $node->refresh();
+        $this->assertEquals($node->parent_id, null);
 
         $dataSet = $this->getConnection()->createDataSet(['tree']);
         $expectedDataSet = new ArrayDataSet(require(__DIR__ . '/data/test-make-root-update.php'));

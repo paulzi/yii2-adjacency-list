@@ -13,8 +13,7 @@ use paulzi\adjacencyList\AdjacencyListBehavior;
  * @author PaulZi <pavel.zimakoff@gmail.com>
  *
  * @property integer $id
- * @property string $path
- * @property integer $depth
+ * @property string $parent_id
  * @property integer $sort
  * @property string $slug
  *
