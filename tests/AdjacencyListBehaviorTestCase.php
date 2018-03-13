@@ -38,6 +38,10 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $data = [];
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, Node::findOne(1)->getParentsOrdered()));
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, NodeJoin::findOne(1)->getParentsOrdered()));
+
+        $data = [2, 5];
+        $this->assertEquals($data, array_map(function ($value) { return $value->id; }, Node::findOne(14)->getParentsOrdered(2)));
+        $this->assertEquals($data, array_map(function ($value) { return $value->id; }, NodeJoin::findOne(14)->getParentsOrdered(2)));
     }
 
     public function testGetParent()
@@ -82,6 +86,10 @@ class AdjacencyListBehaviorTestCase extends BaseTestCase
         $data = [57, 56, 55, 54];
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, Node::findOne(44)->getDescendantsOrdered()));
         $this->assertEquals($data, array_map(function ($value) { return $value->id; }, NodeJoin::findOne(44)->getDescendantsOrdered()));
+
+        $data = [8, 9, 10];
+        $this->assertEquals($data, array_map(function ($value) { return $value->id; }, Node::findOne(3)->getDescendantsOrdered(1)));
+        $this->assertEquals($data, array_map(function ($value) { return $value->id; }, NodeJoin::findOne(3)->getDescendantsOrdered(1)));
     }
 
     public function testGetChildren()

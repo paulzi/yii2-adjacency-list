@@ -136,15 +136,16 @@ class AdjacencyListBehavior extends Behavior
     }
 
     /**
+     * @param int|null $depth
      * @return ActiveRecord[]
      * @throws Exception
      */
-    public function getParentsOrdered()
+    public function getParentsOrdered($depth = null)
     {
-        if ($this->_parentsOrdered !== null) {
+        if ($depth === null && $this->_parentsOrdered !== null) {
             return $this->_parentsOrdered;
         }
-        $parents = $this->getParents()->all();
+        $parents = $this->getParents($depth)->all();
         $ids = array_flip($this->getParentsIds());
         $primaryKey = $this->getPrimaryKey();
         usort($parents, function($a, $b) use ($ids, $primaryKey) {
@@ -156,7 +157,10 @@ class AdjacencyListBehavior extends Behavior
                 return $aIdx > $bIdx ? -1 : 1;
             }
         });
-        return $this->_parentsOrdered = $parents;
+        if ($depth !== null) {
+            $this->_parentsOrdered = $parents;
+        }
+        return $parents;
     }
 
     /**
@@ -201,13 +205,18 @@ class AdjacencyListBehavior extends Behavior
     }
 
     /**
+     * @param int|null $depth
      * @return ActiveRecord[]
      * @throws Exception
      */
-    public function getDescendantsOrdered()
+    public function getDescendantsOrdered($depth = null)
     {
-        $descendants = $this->owner->descendants;
-        $ids = array_flip($this->getDescendantsIds(null, true));
+        if ($depth === null) {
+            $descendants = $this->owner->descendants;
+        } else {
+            $descendants = $this->getDescendants($depth)->all();
+        }
+        $ids = array_flip($this->getDescendantsIds($depth, true));
         $primaryKey = $this->getPrimaryKey();
         usort($descendants, function($a, $b) use ($ids, $primaryKey) {
             $aIdx = $ids[$a->$primaryKey];
