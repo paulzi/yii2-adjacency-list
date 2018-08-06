@@ -436,25 +436,26 @@ class AdjacencyListBehavior extends Behavior
      * Populate children relations for self and all descendants
      *
      * @param int $depth = null
+     * @param string|array $with = null
      * @return static
      */
-    public function populateTree($depth = null)
+    public function populateTree($depth = null, $with = null)
     {
         /** @var ActiveRecord[]|static[] $nodes */
         $depths = [$this->owner->getPrimaryKey() => 0];
-        if ($depth === null) {
-            $nodes = $this->owner->descendantsOrdered;
-        } else {
-            $data = $this->getDescendantsIds($depth);
-            foreach ($data as $i => $ids) {
-                foreach ($ids as $id) {
-                    $depths[$id] = $i + 1;
-                }
+        $data = $this->getDescendantsIds($depth);
+        foreach ($data as $i => $ids) {
+            foreach ($ids as $id) {
+                $depths[$id] = $i + 1;
             }
-            $nodes  = $this->getDescendants($depth)
-                ->orderBy($this->sortable !== false ? [$this->behavior->sortAttribute => SORT_ASC] : null)
-                ->all();
         }
+        $query = $this->getDescendants($depth);
+        if ($with) {
+            $query->with($with);
+        }
+        $nodes = $query
+            ->orderBy($this->sortable !== false ? [$this->behavior->sortAttribute => SORT_ASC] : null)
+            ->all();
 
         $relates = [];
         foreach ($nodes as $node) {

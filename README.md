@@ -18,7 +18,7 @@ composer require paulzi/yii2-adjacency-list
 or add
 
 ```bash
-"paulzi/yii2-adjacency-list" : "^2.0"
+"paulzi/yii2-adjacency-list" : "^2.2"
 ```
 
 to the `require` section of your `composer.json` file.
